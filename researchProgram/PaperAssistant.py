@@ -2,7 +2,7 @@ import os
 from typing import List, Generator
 from utils.fewshot_prompt import ai_response_for_summary, usr_for_summary
 from langchain.schema import Document
-from weResearchCore import WeResearch
+from StoryCore import StoryLLM
 from langchain.chains import RetrievalQA, ConversationalRetrievalChain
 from langchain.embeddings.base import Embeddings
 from langchain.document_loaders import ArxivLoader
@@ -12,26 +12,26 @@ from langchain.document_loaders import UnstructuredURLLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from langchain import PromptTemplate, LLMChain
-from researchProgram.weResearchOrigin import WeResearch_Model
+from researchProgram.StoryOrigin import Story_Model
 
 
-class WeResearch_PaperAss(WeResearch_Model):
+class Story_PaperAss(Story_Model):
     """
-    WeResearch Paper Assistant with PDF docs
+    StoryLLM Paper Assistant with PDF docs
     """
     tools: List = []
     user_demo: List = usr_for_summary
     ai_demo: List = ai_response_for_summary
 
     def __init__(self,
-                 chat_model: WeResearch,
+                 chat_model: StoryLLM,
                  ss_model,
                  ss_tokenizer,
                  pattern_pth: str,
                  embeddings_path: str = None,
                  embeddings_model: Embeddings = None,
                  ):
-        super(WeResearch_PaperAss, self).__init__(chat_model, ss_model, ss_tokenizer, pattern_pth)
+        super(Story_PaperAss, self).__init__(chat_model, ss_model, ss_tokenizer, pattern_pth)
         # Load Embeddings Layers
         if embeddings_model is None and embeddings_path is not None:
             self.embeddings = HuggingFaceInstructEmbeddings(model_name=embeddings_path)
@@ -203,7 +203,7 @@ class WeResearch_PaperAss(WeResearch_Model):
 
 class PDF_Center:
     def __init__(self,
-                 pdf_proxy: WeResearch_PaperAss
+                 pdf_proxy: Story_PaperAss
                  ):
         self.proxy = pdf_proxy
 
