@@ -22,7 +22,7 @@ pip install -r requirements.txt
 Deploying on server with the following command line. For example:
 
 ```
-nohup python  storyTeller.py &
+nohup python  storyTeller.py
 ```
 
 ## License
