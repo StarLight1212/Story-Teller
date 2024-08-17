@@ -4,7 +4,7 @@ import pickle
 from utils.settings import *
 from vectorData.chroma import Chroma
 from utils.common_utils import DFAFilter
-from llmCore.weResearchCore import WeResearch
+from llmCore.StoryCore import StoryLLM
 from transformers import AutoTokenizer, AutoModel
 from langchain.embeddings import HuggingFaceInstructEmbeddings, HuggingFaceEmbeddings
 from researchProgram.weResearchOrigin import WeResearch_Model
@@ -31,25 +31,25 @@ vector_db = Chroma(collection_name=COLLECTION_NAME,
                    embedding_function=embeddings_layer,
                    persist_directory=PERSISTENCE_DIR)
 
-# $1. WeResearch Model Initiate & Loading
-weResearch = WeResearch()
-weResearch.load_model(chat_weights)
+# $1. StoryLLM Model Initiate & Loading
+storyLLM = StoryLLM()
+storyLLM.load_model(chat_weights)
 
 # $2. Sentence Similarity Discrimination Model
 ss_model = AutoModel.from_pretrained(ss_weights)
 ss_tokenizer = AutoTokenizer.from_pretrained(ss_weights)
 
 # $3.1 Original Chatbot for Normal Chatting
-weResearch_chat = WeResearch_Model(weResearch, ss_model, ss_tokenizer,
+weResearch_chat = WeResearch_Model(storyLLM, ss_model, ss_tokenizer,
                                    pattern_pth=pattern_path)
 
 # $3.2 Experiment Assistant
-exp_assistant = SemanticsFam_Expr(weResearch, ss_model, ss_tokenizer,
+exp_assistant = SemanticsFam_Expr(storyLLM, ss_model, ss_tokenizer,
                                pattern_path, embeddings_model=embeddings_layer,
                                persist_path='./dataRestore/chroma_storage_exp')
 
 # $3.3 Paper Reads' Assistant
-docs_assistant = WeResearch_PaperAss(weResearch, ss_model, ss_tokenizer,
+docs_assistant = WeResearch_PaperAss(storyLLM, ss_model, ss_tokenizer,
                                pattern_path, embeddings_model=embeddings_layer)
 
 # answers_with_docs = docs_assistant.chat_with_docs(query)
