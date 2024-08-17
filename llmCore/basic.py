@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Dict, Tuple, Union, Optional, List
 
 
-class ResearchBase:
+class StoryBase:
     def __init__(self):
         pass
 
