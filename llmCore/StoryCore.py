@@ -95,16 +95,16 @@ def test_mode(cosine_scores, threshold: float, set_dict):
     return None
 
 
-class WeResearch(LLM):
+class StoryLLM(LLM):
     """
-    This code defines a WeResearch class that extends the LLM class from langchain.llms.base module.
+    This code defines a StoryLLM class that extends the LLM class from langchain.llms.base module.
     It imports required libraries and contains several functions to tokenize, encode,
     and normalize sentences, calculate cosine similarity between input and reference sentences,
     and get the most similar sentence. The mode_common_utils function ranks the similarity of the
     sentences by their scores. If the score of the best-matching sentence is higher than a threshold,
     the test_mode function returns the corresponding answer. If not, it returns None.
 
-    The WeResearch class has the following attributes:
+    The StoryLLM class has the following attributes:
     - num_gpus: the number of GPUs to use for processing the model.
     - max_new_tokens: the maximum number of new tokens that can be added to the conversation.
     - temperature: the temperature for the softmax function used to sample the next token in the conversation.
