@@ -7,9 +7,9 @@ from utils.common_utils import DFAFilter
 from llmCore.StoryCore import StoryLLM
 from transformers import AutoTokenizer, AutoModel
 from langchain.embeddings import HuggingFaceInstructEmbeddings, HuggingFaceEmbeddings
-from researchProgram.weResearchOrigin import WeResearch_Model
+from researchProgram.StoryOrigin import Story_Model
 from researchProgram.SemanticSearch_exp import SemanticsFam_Expr
-from researchProgram.PaperAssistant import WeResearch_PaperAss
+from researchProgram.PaperAssistant import Story_PaperAss
 
 
 # ------------Settings ---------
@@ -40,7 +40,7 @@ ss_model = AutoModel.from_pretrained(ss_weights)
 ss_tokenizer = AutoTokenizer.from_pretrained(ss_weights)
 
 # $3.1 Original Chatbot for Normal Chatting
-weResearch_chat = WeResearch_Model(storyLLM, ss_model, ss_tokenizer,
+story_chat = Story_Model(storyLLM, ss_model, ss_tokenizer,
                                    pattern_pth=pattern_path)
 
 # $3.2 Experiment Assistant
@@ -49,13 +49,13 @@ exp_assistant = SemanticsFam_Expr(storyLLM, ss_model, ss_tokenizer,
                                persist_path='./dataRestore/chroma_storage_exp')
 
 # $3.3 Paper Reads' Assistant
-docs_assistant = WeResearch_PaperAss(storyLLM, ss_model, ss_tokenizer,
+docs_assistant = Story_PaperAss(storyLLM, ss_model, ss_tokenizer,
                                pattern_path, embeddings_model=embeddings_layer)
 
 # answers_with_docs = docs_assistant.chat_with_docs(query)
 
 
-class WeResearch(tornado.web.RequestHandler):
+class StoryLLM_API(tornado.web.RequestHandler):
     def post(self):
         # 从POST请求的body中获取输入的JSON数据
         request_data = json.loads(self.request.body)
@@ -67,7 +67,7 @@ class WeResearch(tornado.web.RequestHandler):
         # query_text = filter_proxy.filter(message=input_text)
         # is_sensitive = 1 if '*' in query_text else 0
         # Large Language Model Prediction
-        predicted_text = weResearch_chat.process(input_text, history)
+        predicted_text = story_chat.process(input_text, history)
         # 设置HTTP响应头信息，指定数据格式为JSON
         self.set_header("Content-Type", "application/json")
 
@@ -135,7 +135,7 @@ class PaperAssistant(tornado.web.RequestHandler):
 if __name__ == "__main__":
     # 创建Tornado应用程序
     app = tornado.web.Application([
-        (r"/weresearch", WeResearch),
+        (r"/story_teller", StoryLLM_API),
         (r"/chat_with_protocol", ExperimentAssistant),
         (r"/chat_with_paper", PaperAssistant)
     ])
