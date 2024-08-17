@@ -1,11 +1,11 @@
-from llmCore.basic import ResearchBase
+from llmCore.basic import StoryBase
 import torch
-from llmCore.weResearchCore import WeResearch, load_sentences2Ans, \
+from llmCore.StoryCore import StoryLLM, load_sentences2Ans, \
     tokenize_encode_norm_process, test_mode, get_sentence_similarity_score
 from typing import Dict, Optional, List, Generator
 
 
-class WeResearch_Model(ResearchBase):
+class Story_Model(StoryBase):
     # Threshold for selection the Pattern and AI Chat Mode
     num_gpus = 1
     threshold = 0.8
@@ -13,13 +13,13 @@ class WeResearch_Model(ResearchBase):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'  # Device
 
     def __init__(self,
-                 chat_model: WeResearch,
+                 chat_model: StoryLLM,
                  ss_model,
                  ss_tokenizer,
                  pattern_pth: str,
                  stream: bool = True  # test_mode, debug_mode
                  ) -> None:
-        super(WeResearch_Model, self).__init__()
+        super(Story_Model, self).__init__()
         self.stream = stream
         # Loading Chat Model
         self.chat_model = chat_model
@@ -37,7 +37,7 @@ class WeResearch_Model(ResearchBase):
         yield {"generated_text": pat_ans}
 
     def process(self, usr_query: str,
-                history: Optional[List[Dict]] = None) -> Generator or WeResearch:
+                history: Optional[List[Dict]] = None) -> Generator or StoryLLM:
         # Pattern Recommendation
         # Calculate Sentence Similarity Score, cosine theta
         cosine_scores = get_sentence_similarity_score(usr_query, self.ref_sentences_embedded, self.ss_tokenizer,
