@@ -1,22 +1,22 @@
 from typing import List, Tuple, Dict
 from langchain.schema import Document
 from langchain.embeddings.base import Embeddings
-from weResearchCore import WeResearch
+from StoryCore import StoryLLM
 from langchain.vectorstores import Chroma
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
-from researchProgram.weResearchOrigin import WeResearch_Model
+from researchProgram.StoryOrigin import Story_Model
 from langchain.memory import ConversationBufferMemory
 from utils.conversation import conv_templates
 
 
-class SemanticsFam_Expr(WeResearch_Model):
+class SemanticsFam_Expr(Story_Model):
     """
     Semantics Search Family for Experiments Protocol Retrieval
     """
     def __init__(self,
-                 chat_model: WeResearch,
+                 chat_model: StoryLLM,
                  ss_model,
                  ss_tokenizer,
                  pattern_pth: str,
@@ -49,7 +49,7 @@ class SemanticsFam_Expr(WeResearch_Model):
     def normal_template():
         """Answer the question in fair, objective tone."""
         # Initial Context Templates
-        template = """You are WeResearch Chatbot having a conversation with a human.
+        template = """You are StoryLLM Chatbot having a conversation with a human.
 
         {chat_history}
         
@@ -78,7 +78,7 @@ class SemanticsFam_Expr(WeResearch_Model):
         if history is not None:
             for msg in history:
                 self.chat_model.conv.append_message(self.chat_model.conv.roles[0], msg['usr_input'])
-                self.chat_model.conv.append_message(self.chat_model.conv.roles[1], msg['weResearch'])
+                self.chat_model.conv.append_message(self.chat_model.conv.roles[1], msg['StoryLLM'])
         # Chat Settings
         # TODO: 当前无法支持不同对话间的查询
         history_pro = self.chat_model.conv.get_prompt()
