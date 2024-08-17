@@ -116,7 +116,7 @@ class StoryLLM(LLM):
     - conv_template: the conversation template to use.
     - conv: the conversation object.
 
-    The WeResearch class has two methods:
+    The StoryLLM class has two methods:
     - __init__: initializes the class.
     - _call: processes the input and returns the output. If a history is provided,
     it is added to the conversation. The method then tokenizes, encodes, and normalizes the input sentences,
@@ -136,11 +136,11 @@ class StoryLLM(LLM):
     conv = conv_templates[conv_template].copy()  # Conversation Start
 
     def __init__(self) -> None:
-        super(WeResearch, self).__init__()
+        super(StoryLLM, self).__init__()
 
     @property
     def _llm_type(self) -> str:
-        return "WeResearch"
+        return "StoryLLM"
 
     def __call__(self, inputs, history: Optional[List[Dict]] = None,
                  stream: bool = True, *args, **kwargs):
@@ -159,7 +159,7 @@ class StoryLLM(LLM):
         if history is not None:
             for msg in history:
                 self.conv.append_message(self.conv.roles[0], msg['usr_input'])
-                self.conv.append_message(self.conv.roles[1], msg['weResearch'])
+                self.conv.append_message(self.conv.roles[1], msg['StoryLLM'])
 
         # Chat Settings
         # Record user inputs history in current chat dialogue
@@ -193,7 +193,7 @@ class StoryLLM(LLM):
                 answers += " ".join(outputs[pre:now]) + ' '
                 pre = now
         answers += " ".join(outputs[pre:])
-        # Record ResearchGPT Response Info
+        # Record StoryLLM Response Info
         self.conv.messages[-1][-1] = " ".join(outputs)
 
         return answers
@@ -213,7 +213,7 @@ class StoryLLM(LLM):
                 pre = now
         answers += " ".join(outputs[pre:])
         yield {"generated_text": answers}
-        # Record ResearchGPT Response Info
+        # Record StoryLLM Response Info
         self.conv.messages[-1][-1] = " ".join(outputs)
 
     def _generate(
